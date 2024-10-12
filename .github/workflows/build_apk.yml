@@ -21,7 +21,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install flet pyinstaller buildozer
-
+      
+      - name: Install dependencies
+        run: |
+          pip install flet pyinstaller buildozer cython
+          
       - name: Build Flet App Executable
         run: |
           pyinstaller --onefile main.py  # Ensure this matches your main script name
@@ -41,10 +45,6 @@ jobs:
         run: |
           cd my_app
           buildozer -v android debug  # Builds the APK
-          
-      - name: Install dependencies
-        run: |
-          pip install flet pyinstaller buildozer cython
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
