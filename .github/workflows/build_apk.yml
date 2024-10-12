@@ -34,7 +34,12 @@ jobs:
       - name: Build Flet App Executable
         run: |
           pyinstaller --onefile main.py  # Ensure this matches your main script name
-
+          
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          
       - name: Prepare for APK build
         run: |
           mkdir -p my_app/bin
