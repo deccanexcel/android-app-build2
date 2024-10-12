@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install tar and other utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tar gzip
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -50,6 +55,13 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+          java-package: jdk
+          architecture: x64
+          check-latest: false
+          server-id: github
+          server-username: ${{ github.actor }}
+          server-password: ${{ secrets.GITHUB_TOKEN }}
+          overwrite-settings: true
 
       - name: Build Flet App Executable
         run: |
