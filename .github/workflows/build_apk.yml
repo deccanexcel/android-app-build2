@@ -43,7 +43,7 @@ jobs:
           buildozer -v android debug  # Builds the APK
 
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: MyFletApp-debug.apk
           path: my_app/bin/*.apk  # Adjust this path based on your app's output directory
