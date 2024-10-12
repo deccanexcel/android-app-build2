@@ -20,12 +20,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install flet pyinstaller buildozer
-      
-      - name: Install dependencies
-        run: |
           pip install flet pyinstaller buildozer cython
-          
+
       - name: Install Android SDK
         run: |
           mkdir -p $HOME/android-sdk
@@ -33,20 +29,22 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
           unzip commandlinetools-linux-9477386_latest.zip
           rm commandlinetools-linux-9477386_latest.zip
-          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk --licenses
-          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+          # Set up the tools directory
+          mkdir -p cmdline-tools/latest
+          mv cmdline-tools/* cmdline-tools/latest/
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-30"
 
-          
-      - name: Build Flet App Executable
-        run: |
-          pyinstaller --onefile main.py  # Ensure this matches your main script name
-          
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
-          
+
+      - name: Build Flet App Executable
+        run: |
+          pyinstaller --onefile main.py  # Ensure this matches your main script name
+
       - name: Prepare for APK build
         run: |
           mkdir -p my_app/bin
