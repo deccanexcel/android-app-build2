@@ -13,16 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Install tar and other system dependencies
+      # Install system dependencies including ldd
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y tar gzip
+          sudo apt-get install -y tar gzip libc-bin
 
-      - name: Verify tar installation
+      - name: Verify tar and ldd installation
         run: |
           which tar
           tar --version
+          which ldd
+          ldd --version
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -69,7 +71,6 @@ jobs:
           server-password: ${{ secrets.GITHUB_TOKEN }}
           overwrite-settings: true
 
-        # Explicitly set the PATH for Java installation to use tar
         env:
           PATH: /usr/bin:$PATH  # Ensures the correct tar path is available
 
