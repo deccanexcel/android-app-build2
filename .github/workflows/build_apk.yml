@@ -69,6 +69,10 @@ jobs:
           server-password: ${{ secrets.GITHUB_TOKEN }}
           overwrite-settings: true
 
+        # Explicitly set the PATH for Java installation to use tar
+        env:
+          PATH: /usr/bin:$PATH  # Ensures the correct tar path is available
+
       - name: Build Flet App Executable
         run: |
           pyinstaller --onefile main.py  # Ensure this matches your main script name
