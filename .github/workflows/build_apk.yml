@@ -27,16 +27,24 @@ jobs:
           # Clean up any existing cmdline-tools directory
           rm -rf $HOME/android-sdk/cmdline-tools
           mkdir -p $HOME/android-sdk/cmdline-tools
+          
+          # Download and unzip the command line tools
           cd $HOME/android-sdk/cmdline-tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
           unzip commandlinetools-linux-9477386_latest.zip
           rm commandlinetools-linux-9477386_latest.zip
-          # Move the extracted cmdline-tools folder contents to the cmdline-tools directory
-          mv cmdline-tools/* ./
-          rmdir cmdline-tools  # Remove the now-empty cmdline-tools directory
+          
+          # Move the contents to the expected directory structure
+          mv cmdline-tools $HOME/android-sdk/cmdline-tools/latest
 
-          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --licenses
-          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+          # Set ANDROID_HOME environment variable
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "PATH=\$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> $GITHUB_ENV
+
+          # Accept licenses and install required components
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+
 
 
       - name: Set up JDK
