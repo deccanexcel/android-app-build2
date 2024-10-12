@@ -13,7 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install tar and other utilities
+      # Install tar and other dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y tar gzip
@@ -23,7 +24,7 @@ jobs:
         with:
           python-version: '3.11.5'  # Specify the Python version
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           pip install flet pyinstaller buildozer cython
 
