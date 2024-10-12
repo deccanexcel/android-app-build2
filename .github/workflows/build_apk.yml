@@ -24,18 +24,20 @@ jobs:
 
       - name: Install Android SDK
         run: |
-          mkdir -p $HOME/android-sdk
-          cd $HOME/android-sdk
+          # Clean up any existing cmdline-tools directory
+          rm -rf $HOME/android-sdk/cmdline-tools
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          cd $HOME/android-sdk/cmdline-tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
           unzip commandlinetools-linux-9477386_latest.zip
           rm commandlinetools-linux-9477386_latest.zip
-          # Create the directory for the cmdline-tools if it doesn't exist
-          mkdir -p cmdline-tools/latest
-          # Move the extracted cmdline-tools to the latest folder
-          mv cmdline-tools/* cmdline-tools/latest/
-          
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+          # Move the extracted cmdline-tools folder contents to the cmdline-tools directory
+          mv cmdline-tools/* ./
+          rmdir cmdline-tools  # Remove the now-empty cmdline-tools directory
+
+          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --licenses
+          yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+
 
       - name: Set up JDK
         uses: actions/setup-java@v2
