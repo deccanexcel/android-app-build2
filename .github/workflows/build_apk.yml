@@ -26,6 +26,11 @@ jobs:
         run: |
           pip install flet pyinstaller buildozer cython
           
+      - name: Install Android SDK and accept licenses
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "build-tools;35.0.0" "platform-tools" "platforms;android-30"  # Adjust versions as needed
+          
       - name: Build Flet App Executable
         run: |
           pyinstaller --onefile main.py  # Ensure this matches your main script name
