@@ -3,7 +3,7 @@ name: Build Flet APK
 on:
   push:
     branches:
-      - main  # Change this to your main branch if necessary
+      - main  # Adjust if necessary
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11.5'  # Specify the Python version
+          python-version: '3.x'  # Specify the Python version
 
       - name: Install dependencies
         run: |
@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Flet App Executable
         run: |
-          pyinstaller --onefile my_app/bin/main.py  # Adjust this if your main script is named differently
+          pyinstaller --onefile main.py  # Ensure this matches your main script name
 
       - name: Prepare for APK build
         run: |
@@ -43,11 +43,7 @@ jobs:
           buildozer -v android debug  # Builds the APK
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: MyFletApp-debug.apk
-          path: my_app/bin/*.apk  # Adjust this path based on your app's output directory
-
+        uses: actions/upload-artifact@v2
         with:
           name: MyFletApp-debug.apk
           path: my_app/bin/*.apk  # Adjust this path based on your app's output directory
