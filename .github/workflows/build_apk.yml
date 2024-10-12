@@ -45,7 +45,10 @@ jobs:
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-30"
 
-
+      - name: Install tar utility
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tar
 
       - name: Set up JDK
         uses: actions/setup-java@v2
