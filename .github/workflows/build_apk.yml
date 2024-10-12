@@ -26,6 +26,11 @@ jobs:
           which ldd
           ldd --version
 
+      - name: Print Environment Variables
+        run: |
+          echo "JAVA_HOME: $JAVA_HOME"
+          echo "PATH: $PATH"
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -52,33 +57,33 @@ jobs:
 
           # Set ANDROID_HOME environment variable
           echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "PATH=\$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> $GITHUB_ENV
+          echo "PATH=\$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:/usr/bin" >> $GITHUB_ENV
 
           # Accept licenses and install required components
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
           yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-30"
 
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-          java-package: jdk
-          architecture: x64
-          check-latest: false
-          server-id: github
-          server-username: ${{ github.actor }}
-          server-password: ${{ secrets.GITHUB_TOKEN }}
-          overwrite-settings: true
-
-      - name: Verify tar installation before building
+      - name: Manual JDK Installation
         run: |
-          which tar
-          tar --version
+          # Download Java 11
+          wget https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.24%2B8/OpenJDK11U-jdk_x64_linux_hotspot_11.0.24_8.tar.gz
+          # Test Tar
+          tar -cvf test.tar /tmp  # Just a simple test to create a tar file
+          # Extract Java
+          tar -xzf OpenJDK11U-jdk_x64_linux_hotspot_11.0.24_8.tar.gz
+          # Move to the appropriate directory
+          sudo mv jdk-11.0.24+8 /usr/lib/jvm/
+          # Set JAVA_HOME and update PATH
+          echo "JAVA_HOME=/usr/lib/jvm/jdk-11.0.24+8" >> $GITHUB_ENV
+          echo "PATH=\$JAVA_HOME/bin:\$PATH" >> $GITHUB_ENV
+
+      - name: Verify Java installation
+        run: |
+          java -version
 
       - name: Build Flet App Executable
         env:
-          LD_LIBRARY_PATH: /usr/lib/x86_64-linux-gnu  # Ensure ldd can find the libraries
+          LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.5/x64/lib  # Ensure ldd can find the libraries
         run: |
           pyinstaller --onefile main.py  # Ensure this matches your main script name
 
