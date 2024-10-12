@@ -71,6 +71,11 @@ jobs:
           server-password: ${{ secrets.GITHUB_TOKEN }}
           overwrite-settings: true
 
+      - name: Verify tar installation before building
+        run: |
+          which tar
+          tar --version
+
       - name: Build Flet App Executable
         env:
           LD_LIBRARY_PATH: /usr/lib/x86_64-linux-gnu  # Ensure ldd can find the libraries
